@@ -43,6 +43,18 @@ jobs:
         with:
           go-version: '1.21'
 
+      - name: Install system dependencies (Linux)
+        if: matrix.os == 'linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libgtk-3-dev libayatana-appindicator3-dev
+
+      - name: Install system dependencies (macOS)
+        if: matrix.os == 'darwin'
+        run: |
+          # macOS has native system tray support, no extra deps needed
+          echo "macOS build - no additional dependencies required"
+
       - name: Build
         env:
           GOOS: ${{ matrix.os }}
