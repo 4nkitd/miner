@@ -12,22 +12,42 @@ A cross-platform system tray application that bundles Adminer database manager w
 
 ## Installation
 
-1. Build or download the Miner binary for your platform.
-2. Run the install (requires administrator/root privileges):
+### Quick Install (macOS/Linux)
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/4nkitd/miner/main/install.sh | sh
+sudo miner install
+```
+
+### Via Homebrew
+
+```bash
+brew tap 4nkitd/tap
+brew install miner
+sudo miner install
+```
+
+### Manual Installation
+
+1. Download the appropriate binary from the [releases page](https://github.com/4nkitd/miner/releases/latest)
+2. Extract and move to your PATH:
+   ```bash
+   tar xzf miner-*.tar.gz
+   sudo mv miner-* /usr/local/bin/miner
+   sudo chmod +x /usr/local/bin/miner
+   ```
+3. Run installation:
    ```bash
    sudo miner install
    ```
-   This will:
-   - Auto-install FrankenPHP if missing (macOS/Linux)
-   - Add `miner.local` to your hosts file pointing to `127.0.0.1`
-   - Register CLI commands (`php`, `fphp`, `miner`) in your PATH
-   - Install auto-start service (optional)
-3. Start Miner:
+
+### Post-Installation
+
+1. Start Miner:
    ```bash
    miner
    ```
-   No privileges needed for normal operation.
-4. Access Adminer at http://miner.local:88 (non-privileged port)
+2. Access Adminer at http://miner.local:88 (non-privileged port)
 
 ## Usage
 

@@ -1,10 +1,10 @@
 #!/bin/sh
 # Miner installer script
-# Usage: curl -fsSL https://raw.githubusercontent.com/YOUR_USERNAME/miner/main/install.sh | sh
+# Usage: curl -fsSL https://raw.githubusercontent.com/4nkitd/miner/main/install.sh | sh
 
 set -e
 
-REPO="YOUR_USERNAME/miner"
+REPO="4nkitd/miner"
 INSTALL_DIR="${INSTALL_DIR:-/usr/local/bin}"
 
 # Detect OS and architecture

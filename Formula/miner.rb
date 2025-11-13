@@ -1,33 +1,33 @@
 # Homebrew Formula for Miner
-# Installation: brew install YOUR_USERNAME/tap/miner
+# Installation: brew install 4nkitd/tap/miner
 # 
 # To create your tap:
-# 1. Create a GitHub repo: YOUR_USERNAME/homebrew-tap
+# 1. Create a GitHub repo: 4nkitd/homebrew-tap
 # 2. Add this file as: Formula/miner.rb
-# 3. Users install with: brew tap YOUR_USERNAME/tap && brew install miner
+# 3. Users install with: brew tap 4nkitd/tap && brew install miner
 
 class Miner < Formula
   desc "Standalone database manager with Adminer and FrankenPHP"
-  homepage "https://github.com/YOUR_USERNAME/miner"
+  homepage "https://github.com/4nkitd/miner"
   version "1.0.0"
   license "MIT"
 
   on_macos do
     if Hardware::CPU.arm?
-      url "https://github.com/YOUR_USERNAME/miner/releases/download/v1.0.0/miner-darwin-arm64.tar.gz"
+      url "https://github.com/4nkitd/miner/releases/download/v1.0.0/miner-darwin-arm64.tar.gz"
       sha256 "REPLACE_WITH_ACTUAL_SHA256_ARM64"
     else
-      url "https://github.com/YOUR_USERNAME/miner/releases/download/v1.0.0/miner-darwin-amd64.tar.gz"
+      url "https://github.com/4nkitd/miner/releases/download/v1.0.0/miner-darwin-amd64.tar.gz"
       sha256 "REPLACE_WITH_ACTUAL_SHA256_AMD64"
     end
   end
 
   on_linux do
     if Hardware::CPU.arm?
-      url "https://github.com/YOUR_USERNAME/miner/releases/download/v1.0.0/miner-linux-arm64.tar.gz"
+      url "https://github.com/4nkitd/miner/releases/download/v1.0.0/miner-linux-arm64.tar.gz"
       sha256 "REPLACE_WITH_ACTUAL_SHA256_LINUX_ARM64"
     else
-      url "https://github.com/YOUR_USERNAME/miner/releases/download/v1.0.0/miner-linux-amd64.tar.gz"
+      url "https://github.com/4nkitd/miner/releases/download/v1.0.0/miner-linux-amd64.tar.gz"
       sha256 "REPLACE_WITH_ACTUAL_SHA256_LINUX_AMD64"
     end
   end
