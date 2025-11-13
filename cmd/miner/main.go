@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"os/signal"
+	"syscall"
 
 	"github.com/4nkitd/miner/internal/assets"
 	"github.com/4nkitd/miner/internal/cli"
@@ -21,6 +23,12 @@ func main() {
 		switch os.Args[1] {
 		case "install":
 			if err := runInstall(); err != nil {
+				fmt.Fprintf(os.Stderr, "Error: %v\n", err)
+				os.Exit(1)
+			}
+			return
+		case "daemon":
+			if err := runDaemon(); err != nil {
 				fmt.Fprintf(os.Stderr, "Error: %v\n", err)
 				os.Exit(1)
 			}
@@ -52,6 +60,7 @@ func printHelp() {
 	fmt.Println()
 	fmt.Println("Usage:")
 	fmt.Println("  miner              Start the Miner system tray application")
+	fmt.Println("  miner daemon       Run headless server (no tray) in foreground")
 	fmt.Println("  miner install      Install and configure Miner (requires admin/root)")
 	fmt.Println("  miner uninstall    Remove Miner configuration")
 	fmt.Println("  miner help         Show this help message")
@@ -168,6 +177,12 @@ func runInstall() error {
 	fmt.Println("✓ Installing auto-start service")
 	if err := svc.Install(); err != nil {
 		fmt.Printf("  Warning: Failed to install auto-start: %v\n", err)
+	} else {
+		if err := svc.Start(); err != nil {
+			fmt.Printf("  Warning: Failed to start service: %v\n", err)
+		} else {
+			fmt.Println("  Service started in background (persistent daemon).")
+		}
 	}
 
 	fmt.Println()
@@ -226,5 +241,36 @@ func runUninstall() error {
 	fmt.Println()
 	fmt.Println("✓ Uninstallation complete!")
 
+	return nil
+}
+
+// runDaemon starts the server headlessly (no tray UI) and blocks until interrupted.
+func runDaemon() error {
+	cfg, err := config.New()
+	if err != nil {
+		return fmt.Errorf("failed to load config: %w", err)
+	}
+
+	hostsManager := hosts.NewManager(cfg.HostsPath)
+	if has, _ := hostsManager.HasEntry(cfg.Domain); !has {
+		return fmt.Errorf("hosts entry missing; run 'sudo miner install' first")
+	}
+
+	srv := server.NewServer(cfg.Port, cfg.Domain, cfg.AssetsDir)
+	fmt.Printf("Starting headless server on %s\n", cfg.URL())
+	if err := srv.Start(); err != nil {
+		return fmt.Errorf("failed to start server: %w", err)
+	}
+	fmt.Println("Headless server running. Press Ctrl+C to stop.")
+
+	sigCh := make(chan os.Signal, 1)
+	signal.Notify(sigCh, syscall.SIGINT, syscall.SIGTERM)
+	<-sigCh
+	fmt.Println("Stopping server...")
+	_ = srv.Stop()
+	if cfg.TempAssets != "" {
+		assets.Cleanup(cfg.TempAssets)
+	}
+	fmt.Println("Server stopped")
 	return nil
 }
